@@ -1,7 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'session.dart';
+import 'response.dart';
+import 'dart:convert';
+import "package:http/http.dart" as http;
 
 class CameraScreen extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -15,7 +21,10 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen> {
   late CameraController _cameraController;
   late Future<void> _initializeControllerFuture;
+  //static const String baseurl = "https://jsonplaceholder.typicode.com/posts";
+  static const String baseurl = "https://api.escuelajs.co/api/v1/files/upload";
   String? _imagePath; // 촬영한 사진의 경로를 저장할 변수
+  String changeText = "확인";
   bool _showPreview = false; // 사진 미리보기와 확인 버튼 표시 여부
   bool _isFromGallery = false; // 앨범에서 선택된 사진 여부
 
@@ -143,11 +152,22 @@ class _CameraScreenState extends State<CameraScreen> {
                   Image.file(File(_imagePath!)), // 촬영한 사진 표시
                   SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      // 확인 버튼을 눌렀을 때의 동작
-                      Navigator.pop(context); // 화면을 닫거나 원하는 동작을 수행
+                    onPressed: () async { 
+                      Uint8List bytes = File(_imagePath!).readAsBytesSync();
+                      // final Map<String, dynamic> data = {
+                      //   'file': bytes,
+                      // };
+                      final ResponseVO responseVO = ResponseVO.fromJSON(await new Session().post('$baseurl', _imagePath!));
+                      print(responseVO.originalname);
+                      print(responseVO.location);
+                      print(responseVO.filename);
+                      if (responseVO != null) {
+                        setState(() {
+                          changeText = responseVO.filename;
+                        });
+                      }
                     },
-                    child: Text('확인'),
+                    child: Text(changeText),  
                   ),
                 ],
               ),
