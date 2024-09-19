@@ -33,7 +33,7 @@ class _CameraScreenState extends State<CameraScreen> {
     super.initState();
     _cameraController = CameraController(
       widget.cameras[0], // 첫 번째 카메라 사용
-      ResolutionPreset.high,
+      ResolutionPreset.medium,
     );
     _initializeControllerFuture = _cameraController.initialize();
   }
@@ -65,10 +65,10 @@ class _CameraScreenState extends State<CameraScreen> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return Positioned(
-                    top: 30,
+                    top: 85,
                     left: 0,
                     right: 0,
-                    height: MediaQuery.of(context).size.height * 0.7, // 화면 세로의 70% 사용
+                    height: MediaQuery.of(context).size.height * 0.615, // 화면 세로의 70% 사용
                     child: CameraPreview(_cameraController),
                   );
                 } else {
@@ -79,10 +79,10 @@ class _CameraScreenState extends State<CameraScreen> {
           // 크롭박스
           if (!_showPreview)
             Positioned(
-              top: 250, // 크롭박스의 상단 위치
-              left: 100, // 크롭박스의 좌측 위치
-              width: 200, // 크롭박스의 너비
-              height: 200, // 크롭박스의 높이
+              top: 300, // 크롭박스의 상단 위치
+              left: 150, // 크롭박스의 좌측 위치
+              width: 100, // 크롭박스의 너비
+              height: 100, // 크롭박스의 높이
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -149,7 +149,12 @@ class _CameraScreenState extends State<CameraScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.file(File(_imagePath!)), // 촬영한 사진 표시
+                  Expanded(
+                    child: Image.file(
+                      File(_imagePath!),
+                      fit: BoxFit.contain, // 이미지 크기를 컨테이너에 맞게 조정
+                    ),
+                  ),
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () async { 
