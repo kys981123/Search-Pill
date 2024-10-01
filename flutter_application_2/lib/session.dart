@@ -12,6 +12,47 @@ class Session {
 
   Map<String, String> cookies = {};
 
+  Future<dynamic> get(String url, String unencodedPath, Map<String, dynamic> queryParams, bool isJson) async{
+    print('get() url: $url');
+
+    // final uri = Uri.parse(Uri.encodeFull(url));
+    // print('uri before');
+    // print(uri.queryParameters);
+    // uri.replace(queryParameters: {
+    //     ...uri.queryParameters,
+    //     ...queryParams,
+    //   },);
+    
+    // print('uri after');
+    // print(uri.queryParameters);
+    
+    if (isJson) {
+      final uri = Uri.http(url, unencodedPath, queryParams);
+
+      final response = await http.get(uri, headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      });
+
+      final int statusCode = response.statusCode;
+      // print(response.body);
+      print(statusCode);
+      print(response);
+      // print(utf8.decode(response.bodyBytes));S
+      return jsonDecode(response.body);
+    }
+    else {
+      final uri = Uri.http(url, unencodedPath, queryParams);
+
+      final response = await http.get(uri);
+
+      final int statusCode = response.statusCode;
+      // print(response.body);
+      print(statusCode);
+      // print(utf8.decode(response.bodyBytes));S
+      return response.body;
+    }
+  }
+
   Future<dynamic> post(String url, String filepath) async{
     print('post() url: $url');
     var request = new http.MultipartRequest('post', Uri.parse(Uri.encodeFull(url)));

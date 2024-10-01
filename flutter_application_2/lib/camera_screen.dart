@@ -71,19 +71,24 @@ class _CameraScreenState extends State<CameraScreen> {
             },
           ),
           // 크롭박스
-          Positioned(
-            top: 300, // 크롭박스의 상단 위치
-            left: 150, // 크롭박스의 좌측 위치
-            width: 100, // 크롭박스의 너비
-            height: 100, // 크롭박스의 높이
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.red, // 크롭박스의 테두리 색상
-                  width: 2.0, // 테두리 두께
+          Align(
+            alignment: Alignment.center, // Stack의 중앙에 배치
+            child: Stack(
+              alignment: Alignment.center, // Stack의 중앙에 배치
+              children: [
+                // 수평선
+                Container(
+                  width: 100, // 수평선의 길이
+                  height: 2, // 수평선의 두께
+                  color: Colors.red, // 수평선의 색상
                 ),
-                borderRadius: BorderRadius.circular(10), // 테두리 모서리 둥글게
-              ),
+                // 수직선
+                Container(
+                  width: 2, // 수직선의 두께
+                  height: 100, // 수직선의 길이
+                  color: Colors.red, // 수직선의 색상
+                ),
+              ],
             ),
           ),
           // 촬영 버튼

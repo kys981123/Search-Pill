@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'camera_screen.dart';
+import 'dart:async';
+import 'info.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +25,47 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(cameras: cameras),
+      home: SplashScreen(cameras: cameras),
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  final List<CameraDescription> cameras;
+
+  SplashScreen({required this.cameras});
+
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _navigateToHome();
+  }
+
+  void _navigateToHome() async {
+    await Future.delayed(Duration(seconds: 3)); // 3초 대기
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => MyHomePage(cameras: widget.cameras),
+        settings: RouteSettings(name: "/"), // 라우트 이름 설정
+      ),
+    ); // 홈 페이지로 이동
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.blue,
+      body: Center(
+        child: Text(
+          'Search-Pill',
+          style: TextStyle(color: Colors.white, fontSize: 24),
+        ),
+      ),
     );
   }
 }
