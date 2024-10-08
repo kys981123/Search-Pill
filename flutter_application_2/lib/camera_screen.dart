@@ -7,6 +7,7 @@ import 'image_preview.dart';  // 새로 만든 ImagePreview 파일
 import 'session.dart';
 import 'info.dart';
 import 'response.dart';
+import 'package:introduction_screen/introduction_screen.dart';
 
 class CameraScreen extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -20,7 +21,6 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen> {
   late CameraController _cameraController;
   late Future<void> _initializeControllerFuture;
-  static const String baseurl = "https://api.escuelajs.co/api/v1/files/upload";
 
   @override
   void initState() {
@@ -30,6 +30,46 @@ class _CameraScreenState extends State<CameraScreen> {
       ResolutionPreset.medium,
     );
     _initializeControllerFuture = _cameraController.initialize();
+
+    // 프레임이 빌드된 후 온보딩 화면을 보여줍니다.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showOnboarding();
+    });
+  }
+
+  void _showOnboarding() {
+    showDialog(
+      context: context,
+      builder: (context) => IntroductionScreen(
+        pages: [
+          PageViewModel(
+            title: "Welcome to Search-Pill",
+            body: "This app helps you identify pills.",
+            image: Center(child: Icon(Icons.camera, size: 100)),
+          ),
+          PageViewModel(
+            title: "Take a Picture",
+            body: "Use the camera to take a picture of the pill.",
+            image: Center(child: Icon(Icons.camera_alt, size: 100)),
+          ),
+          PageViewModel(
+            title: "Get Results",
+            body: "Get information about the pill.",
+            image: Center(child: Icon(Icons.info, size: 100)),
+          ),
+        ],
+        onDone: () {
+          Navigator.of(context).pop();  // 온보딩 완료 시 다이얼로그 닫기
+        },
+        onSkip: () {
+          Navigator.of(context).pop();  // 온보딩 스킵 시 다이얼로그 닫기
+        },
+        showSkipButton: true,
+        skip: const Text("Skip"),
+        next: const Icon(Icons.arrow_forward),
+        done: const Text("Done"),
+      ),
+    );
   }
 
   Future<void> _pickImageFromGallery() async {
@@ -62,7 +102,7 @@ class _CameraScreenState extends State<CameraScreen> {
                   top: 85,
                   left: 0,
                   right: 0,
-                  height: MediaQuery.of(context).size.height * 0.615, // 화면 세로의 61.5% 사용
+                  height: MediaQuery.of(context).size.height * 0.615,
                   child: CameraPreview(_cameraController),
                 );
               } else {
@@ -72,21 +112,21 @@ class _CameraScreenState extends State<CameraScreen> {
           ),
           // 크롭박스
           Align(
-            alignment: Alignment.center, // Stack의 중앙에 배치
+            alignment: Alignment.center,
             child: Stack(
-              alignment: Alignment.center, // Stack의 중앙에 배치
+              alignment: Alignment.center,
               children: [
                 // 수평선
                 Container(
-                  width: 100, // 수평선의 길이
-                  height: 2, // 수평선의 두께
-                  color: Colors.red, // 수평선의 색상
+                  width: 100,
+                  height: 2,
+                  color: Colors.red,
                 ),
                 // 수직선
                 Container(
-                  width: 2, // 수직선의 두께
-                  height: 100, // 수직선의 길이
-                  color: Colors.red, // 수직선의 색상
+                  width: 2,
+                  height: 100,
+                  color: Colors.red,
                 ),
               ],
             ),
@@ -94,7 +134,7 @@ class _CameraScreenState extends State<CameraScreen> {
           // 촬영 버튼
           Positioned(
             bottom: 20,
-            left: MediaQuery.of(context).size.width * 0.5 - 120, // 버튼을 중앙에 위치 (왼쪽 버튼을 위해 조정)
+            left: MediaQuery.of(context).size.width * 0.5 - 120,
             child: ElevatedButton(
               onPressed: () async {
                 try {

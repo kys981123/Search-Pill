@@ -88,7 +88,7 @@ class _SplashScreenState extends State<SplashScreen> {
         
         final rand_len = rand_str.length;
         final int rand = int.parse(rand_str.substring(1,rand_len-2)); 
-        
+
         String pill_seq = unmapper[rand].toString();
         String pill_seq_name_1 = 'item_seq';
         String pill_seq_name_2 = 'itemSeq';
@@ -108,14 +108,15 @@ class _SplashScreenState extends State<SplashScreen> {
           'type' : 'json',
           pill_seq_name_2 : pill_seq,
         };
-
-        Map<String, dynamic> json1 = await Session()
+        Map<String, dynamic> json1 ={};
+        Map<String, dynamic> json2 ={};
+        json1 = await Session()
           .get('apis.data.go.kr', '/1471000/MdcinGrnIdntfcInfoService01/getMdcinGrnIdntfcInfoList01', queryParams1, true);
-        Map<String, dynamic> json2 = await Session()
+        json2 = await Session()
           .get('apis.data.go.kr', '/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList', queryParams2, true);
-
+        
         if (json1['body']['items'][0].isNotEmpty && json2['body']['items'][0].isNotEmpty) {
-
+          
           response_json['item_image'] = json1['body']['items'][0]['ITEM_IMAGE'];
           response_json['class_name'] = json1['body']['items'][0]['CLASS_NAME'];
 

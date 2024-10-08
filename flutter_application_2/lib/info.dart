@@ -15,8 +15,8 @@ class InfoPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.network('https://placehold.co/300/jpg'),
-            //Image.network(response_json['item_image']), // 원하는 이미지 URL
+            //Image.network('https://placehold.co/300/jpg'),
+            Image.network(response_json['item_image']), // 원하는 이미지 URL
 
 
             // response_json['itemSeq']
